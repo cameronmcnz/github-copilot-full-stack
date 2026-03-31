@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <header class="header">
+        <h1>🎮 Rock Paper Scissors</h1>
+        <p class="subtitle">Compete Against the Computer</p>
+      </header>
+
+      <div class="tabs">
+        <button
+          v-for="tab in tabs"
+          :key="tab"
+          @click="currentTab = tab"
+          :class="['tab-btn', { active: currentTab === tab }]"
+        >
+          {{ tab }}
+        </button>
+      </div>
+
+      <main class="content">
+        <!-- Play Tab -->
+        <div v-if="currentTab === 'Play'" class="tab-content">
+          <div v-if="!currentMatch" class="play-section">
+            <div class="empty-state">
+              <p>No active match. Start a new one!</p>
+              <button @click="startNewMatch" class="btn btn-primary btn-large">
+                Start New Match
+              </button>
+            </div>
+          </div>
+
+          <div v-else class="play-section">
+            <div class="match-info">
+              <div class="score-board">
+                <div class="score-item">
+                  <div class="player-label">You</div>
+                  <div class="score">{{ currentMatch.player_score }}</div>
+                </div>
+                <div class="vs">vs</div>
+                <div class="score-item">
+                  <div class="computer-label">Computer</div>
+                  <div class="score">{{ currentMatch.computer_score }}</div>
+                </div>
+              </div>
+
+              <div class="round-indicator">
+                <span v-if="currentMatch.status === 'in_progress'">
+                  Round {{ getRoundNumber() }}
+                </span>
+                <span v-else class="match-complete">
+                  Match Complete
+                </span>
+              </div>
+            </div>
+
+            <div v-if="lastRound" class="round-result">
+              <div class="round-result-container">
+                <div class="player-section">
+                  <div class="choice-display">
+                    {{ getEmoji(lastRound.player_choice) }}
+                  </div>
+                  <p>{{ lastRound.player_choice }}</p>
+                </div>
+
+                <div class="result-text">
+                  <div v-if="lastRound.winner === 'player'" class="winner">
+                    You Won! 🎉
+                  </div>
+                  <div v-else-if="lastRound.winner === 'computer'" class="loser">
+                    You Lost 😔
+                  </div>
+                  <div v-else class="tie">
+                    Tie! 🤝
+                  </div>
+                </div>
+
+                <div class="computer-section">
+                  <div class="choice-display">
+                    {{ getEmoji(lastRound.computer_choice) }}
+                  </div>
+                  <p>{{ lastRound.computer_choice }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="currentMatch.status === 'in_progress'" class="choices">
+              <button
+                v-for="choice in ['rock', 'paper', 'scissors']"
+                :key="choice"
+                @click="playMove(choice)"
+                class="choice-btn"
+                :disabled="isLoading"
+              >
+                <span class="emoji">{{ getEmoji(choice) }}</span>
+                <span class="label">{{ choice }}</span>
+              </button>
+            </div>
+
+            <div v-if="currentMatch.status === 'completed'" class="match-complete-section">
+              <div class="match-summary">
+                <div class="summary-title">Match Over!</div>
+                <div v-if="currentMatch.winner === 'player'" class="winner-text">
+                  🏆 You Won the Match! 🏆
+                </div>
+                <div v-else class="loser-text">
+                  💻 Computer Won the Match
+                </div>
+              </div>
+
+              <button @click="startNewMatch" class="btn btn-primary btn-large">
+                Play Again
+              </button>
+            </div>
+
+            <div v-if="errorMessage" class="error-message">
+              {{ errorMessage }}
+            </div>
+          </div>
+        </div>
+
+        <!-- History Tab -->
+        <div v-if="currentTab === 'History'" class="tab-content">
+          <div class="history-section">
+            <button @click="loadMatches" class="btn btn-secondary">
+              Refresh History
+            </button>
+
+            <div v-if="matches.length === 0" class="empty-state">
+              <p>No match history yet.</p>
+            </div>
+
+            <div v-else class="matches-list">
+              <div
+                v-for="match in matches"
+                :key="match.id"
+                @click="selectMatch(match)"
+                class="match-card clickable"
+              >
+                <div class="match-header">
+                  <span class="date">
+                    {{ formatDate(match.created_at) }}
+                  </span>
+                  <span v-if="match.winner === 'player'" class="result won">
+                    Won
+                  </span>
+                  <span v-else-if="match.winner === 'computer'" class="result lost">
+                    Lost
+                  </span>
+                  <span v-else class="result pending">
+                    In Progress
+                  </span>
+                </div>
+                <div class="match-score">
+                  {{ match.player_score }} - {{ match.computer_score }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Match Detail Tab -->
+        <div v-if="currentTab === 'Match Detail'" class="tab-content">
+          <div v-if="!selectedMatch" class="empty-state">
+            <p>Select a match from History to view details.</p>
+          </div>
+
+          <div v-else class="detail-section">
+            <div class="detail-header">
+              <button @click="selectedMatch = null" class="btn btn-secondary">
+                ← Back to History
+              </button>
+              <div class="detail-title">
+                Match Details
+              </div>
+            </div>
+
+            <div class="match-detail-info">
+              <div class="info-row">
+                <span class="label">Date:</span>
+                <span class="value">{{ formatDate(selectedMatch.created_at) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Status:</span>
+                <span class="value">{{ selectedMatch.status }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Winner:</span>
+                <span class="value">
+                  {{ selectedMatch.winner === 'player' ? 'You' : selectedMatch.winner === 'computer' ? 'Computer' : 'In Progress' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="rounds-detail">
+              <h3>Round Details</h3>
+              <div v-if="selectedMatch.rounds && selectedMatch.rounds.length > 0" class="rounds-list">
+                <div v-for="round in selectedMatch.rounds" :key="round.id" class="round-detail">
+                  <div class="round-header">Round {{ round.round_number }}</div>
+                  <div class="round-choices">
+                    <div class="choice">
+                      <span class="emoji">{{ getEmoji(round.player_choice) }}</span>
+                      <span>{{ round.player_choice }}</span>
+                    </div>
+                    <div class="vs-small">vs</div>
+                    <div class="choice">
+                      <span class="emoji">{{ getEmoji(round.computer_choice) }}</span>
+                      <span>{{ round.computer_choice }}</span>
+                    </div>
+                  </div>
+                  <div class="round-result-text">
+                    <span v-if="round.winner === 'player'" class="winner">You Won</span>
+                    <span v-else-if="round.winner === 'computer'" class="loser">You Lost</span>
+                    <span v-else class="tie">Tie</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Troubleshooting Tab -->
+        <div v-if="currentTab === 'Troubleshooting'" class="tab-content">
+          <div class="troubleshooting-section">
+            <div class="info-card">
+              <h3>System Information</h3>
+              <div class="info-item">
+                <span class="key">User ID:</span>
+                <span class="value">{{ userId }}</span>
+              </div>
+              <div class="info-item">
+                <span class="key">API Base:</span>
+                <span class="value">{{ apiBase }}</span>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <h3>Health Checks</h3>
+              <div class="health-checks">
+                <button @click="checkHealth" class="btn btn-secondary">
+                  Run Health Checks
+                </button>
+                <div v-if="healthStatus" class="health-results">
+                  <div :class="['health-item', { healthy: healthStatus.live }]">
+                    <span>/health/live:</span>
+                    <span>{{ healthStatus.live ? '✓ Healthy' : '✗ Unhealthy' }}</span>
+                  </div>
+                  <div :class="['health-item', { healthy: healthStatus.ready }]">
+                    <span>/health/ready:</span>
+                    <span>{{ healthStatus.ready ? '✓ Ready' : '✗ Not Ready' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <h3>API Endpoints</h3>
+              <div class="endpoints-list">
+                <div class="endpoint">
+                  <div class="method">POST</div>
+                  <div class="path">/api/matches</div>
+                  <div class="desc">Start a new match</div>
+                </div>
+                <div class="endpoint">
+                  <div class="method">GET</div>
+                  <div class="path">/api/matches</div>
+                  <div class="desc">List your matches</div>
+                </div>
+                <div class="endpoint">
+                  <div class="method">GET</div>
+                  <div class="path">/api/matches/:id</div>
+                  <div class="desc">Get match details</div>
+                </div>
+                <div class="endpoint">
+                  <div class="method">POST</div>
+                  <div class="path">/api/matches/:id/moves</div>
+                  <div class="desc">Submit a move</div>
+                </div>
+                <div class="endpoint">
+                  <div class="method">GET</div>
+                  <div class="path">/health/live</div>
+                  <div class="desc">Health check: live</div>
+                </div>
+                <div class="endpoint">
+                  <div class="method">GET</div>
+                  <div class="path">/health/ready</div>
+                  <div class="desc">Health check: ready</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="user-id-display">
+          User ID: <span class="user-id-value">{{ userId }}</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

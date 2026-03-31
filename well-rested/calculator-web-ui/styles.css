@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Barlow+Condensed:wght@500;700&display=swap');
+
+:root {
+  --bg0: #0f1012;
+  --bg1: #16181d;
+  --grid-line: rgba(255, 255, 255, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Barlow Condensed', sans-serif;
+  background:
+    radial-gradient(circle at 8% 12%, #2d3139 0, transparent 20%),
+    radial-gradient(circle at 87% 82%, #151822 0, transparent 24%),
+    repeating-linear-gradient(
+      -32deg,
+      transparent 0,
+      transparent 30px,
+      var(--grid-line) 30px,
+      var(--grid-line) 31px
+    ),
+    linear-gradient(130deg, var(--bg0), var(--bg1));
+  color: #edf2f8;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.page-shell {
+  width: 100%;
+  max-width: 980px;
+}

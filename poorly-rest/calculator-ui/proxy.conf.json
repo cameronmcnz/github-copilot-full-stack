@@ -1,0 +1,26 @@
+{
+  "/api/express": {
+    "target": "http://localhost:3007",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/express": ""
+    }
+  },
+  "/api/flask": {
+    "target": "http://localhost:5007",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/flask": ""
+    }
+  },
+  "/api/spring": {
+    "target": "http://localhost:8007",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/spring": ""
+    }
+  }
+}

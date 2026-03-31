@@ -1,0 +1,34 @@
+<server description="Rock Paper Scissors Server">
+    <featureManager>
+        <feature>restfulWS-3.1</feature>
+        <feature>cdi-4.0</feature>
+        <feature>jsonp-2.1</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>persistence-3.1</feature>
+        <feature>jdbc-4.3</feature>
+        <feature>mpConfig-3.1</feature>
+        <feature>mpOpenAPI-4.0</feature>
+        <feature>mpHealth-4.0</feature>
+        <feature>mpMetrics-5.1</feature>
+    </featureManager>
+
+    <basicRegistry id="basic" realm="BasicRealm"/>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="*"
+                  httpPort="9080"
+                  httpsPort="9443"/>
+
+    <applicationManager autoExpand="true"/>
+
+    <library id="H2Lib">
+        <fileset dir="${server.config.dir}/../../shared/resources" includes="h2.jar"/>
+    </library>
+
+    <dataSource id="h2DataSource" jndiName="jdbc/rpsDataSource">
+        <jdbcDriver libraryRef="H2Lib" javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource"/>
+        <properties URL="jdbc:h2:${server.config.dir}/data/rpsdb;AUTO_SERVER=TRUE" user="sa" password=""/>
+    </dataSource>
+
+    <webApplication location="rps.war" contextRoot="/"/>
+</server>

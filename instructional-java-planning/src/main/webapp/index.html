@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <div class="background-glow background-glow-left"></div>
+    <div class="background-glow background-glow-right"></div>
+    <main class="shell">
+        <header class="hero-card">
+            <div>
+                <p class="eyebrow">Best two of three</p>
+                <h1>Rock Paper Scissors Club</h1>
+                <p class="hero-copy">A polished single-player duel with server-backed match state, history, and operational tooling.</p>
+            </div>
+            <div class="hero-badge" id="heroStatus">Connecting...</div>
+        </header>
+
+        <nav class="tab-strip" aria-label="Primary">
+            <button class="tab-button active" data-tab="play">Play</button>
+            <button class="tab-button" data-tab="history">History</button>
+            <button class="tab-button" data-tab="detail">Match Detail</button>
+            <button class="tab-button" data-tab="troubleshooting">Troubleshooting</button>
+        </nav>
+
+        <section class="tab-panel active" id="panel-play">
+            <div class="grid-two">
+                <article class="card stage-card">
+                    <div class="section-heading">
+                        <p class="section-kicker">Current match</p>
+                        <h2 id="matchHeadline">Loading active match</h2>
+                    </div>
+                    <div class="score-row">
+                        <div class="score-pill">
+                            <span class="score-label">You</span>
+                            <strong id="playerScore">0</strong>
+                        </div>
+                        <div class="score-pill">
+                            <span class="score-label">Computer</span>
+                            <strong id="computerScore">0</strong>
+                        </div>
+                        <div class="score-pill">
+                            <span class="score-label">Round</span>
+                            <strong id="roundNumber">1</strong>
+                        </div>
+                    </div>
+                    <p class="status-banner" id="statusMessage">Start a match to begin.</p>
+                    <div class="move-grid">
+                        <button class="move-button move-rock" data-move="ROCK">
+                            <span class="move-emoji">🪨</span>
+                            <span class="move-name">Rock</span>
+                        </button>
+                        <button class="move-button move-paper" data-move="PAPER">
+                            <span class="move-emoji">📄</span>
+                            <span class="move-name">Paper</span>
+                        </button>
+                        <button class="move-button move-scissors" data-move="SCISSORS">
+                            <span class="move-emoji">✂️</span>
+                            <span class="move-name">Scissors</span>
+                        </button>
+                    </div>
+                    <div class="action-row">
+                        <button class="secondary-button" id="newMatchButton">Start new match</button>
+                        <button class="secondary-button ghost-button" id="refreshMatchButton">Refresh state</button>
+                    </div>
+                </article>
+
+                <article class="card summary-card">
+                    <div class="section-heading">
+                        <p class="section-kicker">Round spotlight</p>
+                        <h2>Live match snapshot</h2>
+                    </div>
+                    <div class="versus-card">
+                        <div>
+                            <p class="versus-label">You</p>
+                            <div class="versus-move" id="playerMoveDisplay">❔</div>
+                        </div>
+                        <div class="versus-divider">vs</div>
+                        <div>
+                            <p class="versus-label">Computer</p>
+                            <div class="versus-move" id="computerMoveDisplay">❔</div>
+                        </div>
+                    </div>
+                    <div class="match-summary" id="matchSummary">
+                        <p>Play a round to see the latest result and full match summary.</p>
+                    </div>
+                </article>
+            </div>
+
+            <article class="card history-preview-card">
+                <div class="section-heading inline-heading">
+                    <div>
+                        <p class="section-kicker">Rounds played</p>
+                        <h2>Current match timeline</h2>
+                    </div>
+                    <span class="mini-chip" id="matchCompletionBadge">Awaiting start</span>
+                </div>
+                <div class="round-list" id="currentRoundList"></div>
+            </article>
+        </section>
+
+        <section class="tab-panel" id="panel-history">
+            <article class="card">
+                <div class="section-heading inline-heading">
+                    <div>
+                        <p class="section-kicker">Archived matches</p>
+                        <h2>History</h2>
+                    </div>
+                    <button class="secondary-button ghost-button" id="refreshHistoryButton">Refresh history</button>
+                </div>
+                <div class="history-list" id="historyList"></div>
+            </article>
+        </section>
+
+        <section class="tab-panel" id="panel-detail">
+            <article class="card">
+                <div class="section-heading">
+                    <p class="section-kicker">Selected match</p>
+                    <h2 id="detailHeadline">Pick a match from history</h2>
+                </div>
+                <div id="matchDetailContent" class="detail-content"></div>
+            </article>
+        </section>
+
+        <section class="tab-panel" id="panel-troubleshooting">
+            <div class="grid-two">
+                <article class="card">
+                    <div class="section-heading">
+                        <p class="section-kicker">Environment</p>
+                        <h2>Diagnostics</h2>
+                    </div>
+                    <dl class="diagnostic-grid">
+                        <div>
+                            <dt>Player ID</dt>
+                            <dd id="playerIdDisplay">Pending</dd>
+                        </div>
+                        <div>
+                            <dt>Active match</dt>
+                            <dd id="activeMatchDisplay">Pending</dd>
+                        </div>
+                        <div>
+                            <dt>Live health</dt>
+                            <dd id="liveHealthDisplay">Pending</dd>
+                        </div>
+                        <div>
+                            <dt>Ready health</dt>
+                            <dd id="readyHealthDisplay">Pending</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="card">
+                    <div class="section-heading">
+                        <p class="section-kicker">API explorer</p>
+                        <h2>Inspect the REST layer</h2>
+                    </div>
+                    <div class="api-links">
+                        <a class="link-card" href="openapi" target="_blank" rel="noreferrer">OpenAPI document</a>
+                        <a class="link-card" href="swagger/" target="_blank" rel="noreferrer">Swagger UI</a>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="secondary-button" id="checkHealthButton">Refresh health</button>
+                        <button class="secondary-button ghost-button" id="copyPlayerButton">Copy player ID</button>
+                    </div>
+                </article>
+            </div>
+            <article class="card request-card">
+                <div class="section-heading">
+                    <p class="section-kicker">Manual API call</p>
+                    <h2>Quick request runner</h2>
+                </div>
+                <div class="request-form">
+                    <label>
+                        Method
+                        <select id="apiMethod">
+                            <option>GET</option>
+                            <option>POST</option>
+                        </select>
+                    </label>
+                    <label>
+                        Path
+                        <input id="apiPath" value="api/matches" />
+                    </label>
+                    <label>
+                        JSON body
+                        <textarea id="apiBody" rows="6">{
+  "move": "ROCK"
+}</textarea>
+                    </label>
+                    <button class="secondary-button" id="runApiButton">Send request</button>
+                </div>
+                <pre class="api-output" id="apiOutput">Waiting for a request.</pre>
+            </article>
+        </section>
+    </main>
+    <aside class="player-chip" id="persistentPlayerChip">Player Pending</aside>
+    <script src="js/app.js" type="module"></script>
+</body>
+</html>

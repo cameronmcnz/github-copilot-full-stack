@@ -1,0 +1,15 @@
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: 'Manrope', 'Segoe UI', sans-serif;
+	background: radial-gradient(circle at 20% 20%, #15172e 0%, #090a12 45%, #05060b 100%);
+	color: #f2f3f7;
+}

@@ -1,0 +1,67 @@
+:root {
+    --bg-ink: #090b12;
+    --bg-deep: #0f1220;
+    --rose: #ff85b6;
+    --rose-soft: #ffc8df;
+    --text-main: #ffeef6;
+    --text-subtle: #f3bfd7;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--text-main);
+    font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+    background:
+        radial-gradient(45% 35% at 10% 15%, rgba(255, 157, 202, 0.35), transparent 70%),
+        radial-gradient(40% 32% at 90% 10%, rgba(255, 198, 230, 0.25), transparent 70%),
+        linear-gradient(160deg, var(--bg-deep) 0%, var(--bg-ink) 65%, #08090d 100%);
+    overflow-x: hidden;
+}
+
+.app-shell {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 2rem 1rem;
+}
+
+.calculator-stage {
+    width: min(96vw, 420px);
+    text-align: center;
+    padding: 1rem 0.6rem;
+    animation: stageFade 700ms ease-out;
+}
+
+.app-title {
+    margin: 0;
+    font-size: clamp(1.5rem, 3.8vw, 2rem);
+    letter-spacing: 0.04em;
+    color: #ffd6e9;
+    text-shadow: 0 2px 10px rgba(255, 151, 204, 0.4);
+}
+
+.app-subtitle {
+    margin: 0.5rem 0 1.3rem;
+    color: var(--text-subtle);
+    font-size: clamp(0.92rem, 2.4vw, 1rem);
+}
+
+ios-calculator {
+    margin: 0 auto;
+}
+
+@keyframes stageFade {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

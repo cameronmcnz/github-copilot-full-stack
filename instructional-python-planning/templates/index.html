@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Enterprise</title>
+    <link rel="stylesheet" href="/static/css/site.css">
+</head>
+<body>
+    <div class="background-shape shape-one"></div>
+    <div class="background-shape shape-two"></div>
+    <main class="app-shell">
+        <header class="hero">
+            <h1>Rock Paper Scissors</h1>
+            <p>Best 2 out of 3 against the server. Elegant, fast, and persistent.</p>
+        </header>
+
+        <nav class="tabs" role="tablist">
+            <button class="tab active" data-tab="play" role="tab">Play</button>
+            <button class="tab" data-tab="history" role="tab">History</button>
+            <button class="tab" data-tab="detail" role="tab">Match Detail</button>
+            <button class="tab" data-tab="troubleshooting" role="tab">Troubleshooting</button>
+        </nav>
+
+        <section id="play" class="panel active" role="tabpanel">
+            <div class="card">
+                <div class="card-head">
+                    <h2>Current Match</h2>
+                    <button id="startMatchBtn" class="secondary">Start New Match</button>
+                </div>
+                <p id="statusMessage" class="status-text">Press Start New Match to begin.</p>
+                <div class="score-grid">
+                    <div class="score-card">
+                        <span>Round</span>
+                        <strong id="roundNumber">-</strong>
+                    </div>
+                    <div class="score-card">
+                        <span>Your Score</span>
+                        <strong id="playerScore">0</strong>
+                    </div>
+                    <div class="score-card">
+                        <span>Computer Score</span>
+                        <strong id="computerScore">0</strong>
+                    </div>
+                </div>
+
+                <div class="moves">
+                    <button class="move-btn" data-move="ROCK">🪨 Rock</button>
+                    <button class="move-btn" data-move="PAPER">📄 Paper</button>
+                    <button class="move-btn" data-move="SCISSORS">✂️ Scissors</button>
+                </div>
+
+                <div id="latestRound" class="latest-round"></div>
+
+                <div id="summary" class="summary hidden">
+                    <h3>Match Summary</h3>
+                    <p id="summaryText"></p>
+                    <button id="playAgainBtn">Play Another Match</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="history" class="panel" role="tabpanel">
+            <div class="card">
+                <div class="card-head">
+                    <h2>Match History</h2>
+                    <button id="refreshHistoryBtn" class="secondary">Refresh</button>
+                </div>
+                <div id="historyList" class="history-list"></div>
+            </div>
+        </section>
+
+        <section id="detail" class="panel" role="tabpanel">
+            <div class="card">
+                <h2>Match Detail</h2>
+                <p id="detailHint">Choose a match from History to inspect full round-by-round details.</p>
+                <div id="matchDetailContainer"></div>
+            </div>
+        </section>
+
+        <section id="troubleshooting" class="panel" role="tabpanel">
+            <div class="card">
+                <h2>Troubleshooting</h2>
+                <ul class="tips">
+                    <li>Use Start New Match if your previous game was completed.</li>
+                    <li>Refresh the page during a game to verify server-side state persistence.</li>
+                    <li>Open API docs at <a href="/api/docs/" target="_blank" rel="noreferrer">/api/docs/</a>.</li>
+                    <li>Check health endpoints at <a href="/health/live" target="_blank" rel="noreferrer">/health/live</a> and <a href="/health/ready" target="_blank" rel="noreferrer">/health/ready</a>.</li>
+                </ul>
+                <pre id="debugOutput" class="debug-output"></pre>
+            </div>
+        </section>
+    </main>
+
+    <div class="player-id">User ID: <span id="playerIdLabel">-</span></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

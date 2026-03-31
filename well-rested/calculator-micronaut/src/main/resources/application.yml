@@ -1,0 +1,15 @@
+micronaut:
+  application:
+    name: calculator-micronaut
+  server:
+    port: 3003
+    cors:
+      enabled: true
+      configurations:
+        web:
+          allowedOrigins:
+            - http://localhost:3004
+          allowedMethods:
+            - GET
+          allowedHeaders:
+            - "*"

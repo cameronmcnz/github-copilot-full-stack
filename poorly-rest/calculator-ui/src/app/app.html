@@ -1,0 +1,65 @@
+<main class="page" [ngClass]="themeClass()">
+  <section class="calculator-shell">
+    <header class="header">
+      <div class="header-copy">
+        <p class="eyebrow">Contract-first calculator</p>
+        <h1>Calculator UI</h1>
+      </div>
+      <div class="server-label">
+        <p>{{ selectedBackend().serverUrl }}</p>
+        <p class="ports-caption">Detected backend ports</p>
+        <ul class="ports-list">
+          @for (backend of backends(); track backend.id) {
+            <li>{{ backendDisplayName(backend) }}: {{ backendPort(backend.serverUrl) }} ({{ backend.serverUrl }})</li>
+          }
+        </ul>
+      </div>
+    </header>
+
+    <div class="backend-switcher">
+      @for (backend of backends(); track backend.id) {
+        <button
+          class="backend-chip"
+          [class.active]="backend.id === selectedBackendId()"
+          type="button"
+          (click)="selectBackend(backend.id)">
+          {{ backend.label }}
+        </button>
+      }
+    </div>
+
+    <div class="display-wrap">
+      <p class="expression">{{ expression() || 'Ready' }}</p>
+      <p class="display" [class.loading]="isBusy()">{{ display() }}</p>
+      @if (errorMessage()) {
+        <p class="error">{{ errorMessage() }}</p>
+      }
+    </div>
+
+    <div class="keypad">
+      <button class="btn action" type="button" (click)="clear()">AC</button>
+      <button class="btn action" type="button" (click)="toggleSign()">+/-</button>
+      <button class="btn action" type="button" (click)="setOperation('modulus')">%</button>
+      <button class="btn op" type="button" (click)="setOperation('divide')">÷</button>
+
+      <button class="btn digit" type="button" (click)="inputDigit('7')">7</button>
+      <button class="btn digit" type="button" (click)="inputDigit('8')">8</button>
+      <button class="btn digit" type="button" (click)="inputDigit('9')">9</button>
+      <button class="btn op" type="button" (click)="setOperation('multiply')">x</button>
+
+      <button class="btn digit" type="button" (click)="inputDigit('4')">4</button>
+      <button class="btn digit" type="button" (click)="inputDigit('5')">5</button>
+      <button class="btn digit" type="button" (click)="inputDigit('6')">6</button>
+      <button class="btn op" type="button" (click)="setOperation('subtract')">-</button>
+
+      <button class="btn digit" type="button" (click)="inputDigit('1')">1</button>
+      <button class="btn digit" type="button" (click)="inputDigit('2')">2</button>
+      <button class="btn digit" type="button" (click)="inputDigit('3')">3</button>
+      <button class="btn op" type="button" (click)="setOperation('add')">+</button>
+
+      <button class="btn digit wide" type="button" (click)="inputDigit('0')">0</button>
+      <button class="btn digit" type="button" (click)="inputDecimal()">.</button>
+      <button class="btn op" type="button" (click)="computeResult()">=</button>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "./scripts/deploy-to-s3.ps1",
+        "windows": {
+          "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-to-s3.ps1"
+        },
+        "timeout": 120
+      }
+    ]
+  }
+}

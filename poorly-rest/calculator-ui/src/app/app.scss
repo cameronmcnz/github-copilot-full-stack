@@ -1,0 +1,241 @@
+:host {
+  --bg-a: #121420;
+  --bg-b: #06070f;
+  --panel: #0d0f1a;
+  --screen: #0a0c16;
+  --digit: #3f4458;
+  --digit-text: #f2f5ff;
+  --action: #cfd2d9;
+  --action-text: #151821;
+  --operator: #f79535;
+  --operator-text: #ffffff;
+  --accent: #f79535;
+}
+
+.page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background:
+    radial-gradient(100% 65% at 85% 5%, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 65%),
+    radial-gradient(120% 85% at 10% 95%, color-mix(in srgb, var(--accent) 14%, transparent) 0%, transparent 75%),
+    linear-gradient(160deg, var(--bg-a), var(--bg-b));
+}
+
+.calculator-shell {
+  width: min(430px, 100%);
+  border-radius: 2.1rem;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 94%, black), var(--panel));
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 1.3rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.header-copy h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f5f7ff;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  opacity: 0.75;
+}
+
+.server-label {
+  margin: 0;
+  font-size: 0.72rem;
+  opacity: 0.68;
+  text-align: right;
+}
+
+.server-label p {
+  margin: 0;
+}
+
+.ports-caption {
+  margin-top: 0.25rem;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.ports-list {
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ports-list li {
+  margin-top: 0.1rem;
+}
+
+.backend-switcher {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.backend-chip {
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, #ffffff10);
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  background: transparent;
+  color: #f3f5ff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.backend-chip.active {
+  background: color-mix(in srgb, var(--accent) 32%, #000);
+  border-color: color-mix(in srgb, var(--accent) 70%, #fff);
+}
+
+.display-wrap {
+  margin-top: 1.05rem;
+  border-radius: 1.2rem;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--screen) 85%, #000), var(--screen));
+  padding: 0.9rem 1rem;
+  min-height: 6.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.expression {
+  margin: 0;
+  min-height: 1rem;
+  text-align: right;
+  font-size: 0.84rem;
+  opacity: 0.66;
+}
+
+.display {
+  margin: 0.12rem 0 0;
+  text-align: right;
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  line-height: 1;
+  color: #f8faff;
+  font-weight: 700;
+}
+
+.display.loading {
+  opacity: 0.65;
+}
+
+.error {
+  margin: 0.45rem 0 0;
+  color: #ff9ea0;
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.keypad {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.62rem;
+}
+
+.btn {
+  border: 0;
+  border-radius: 999px;
+  height: 4.15rem;
+  font-size: 1.8rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: transform 90ms ease, filter 160ms ease;
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.digit {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--digit) 90%, white), var(--digit));
+  color: var(--digit-text);
+}
+
+.action {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--action) 95%, #fff), var(--action));
+  color: var(--action-text);
+  font-size: 1.65rem;
+}
+
+.op {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--operator) 88%, white), var(--operator));
+  color: var(--operator-text);
+}
+
+.wide {
+  grid-column: span 2;
+}
+
+.theme-express {
+  --bg-a: #0f1b2b;
+  --bg-b: #04070e;
+  --panel: #0d1828;
+  --screen: #091220;
+  --digit: #3a4b66;
+  --action: #d3d7df;
+  --operator: #36b8c8;
+  --accent: #36b8c8;
+}
+
+.theme-flask {
+  --bg-a: #1f1728;
+  --bg-b: #08040f;
+  --panel: #1d1427;
+  --screen: #150d20;
+  --digit: #524162;
+  --action: #e0d6ea;
+  --operator: #fd8d4c;
+  --accent: #fd8d4c;
+}
+
+.theme-spring {
+  --bg-a: #0c2716;
+  --bg-b: #031006;
+  --panel: #0d2315;
+  --screen: #07180d;
+  --digit: #405e48;
+  --action: #d3e2d4;
+  --operator: #62d07a;
+  --accent: #62d07a;
+}
+
+@media (max-width: 500px) {
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .server-label {
+    text-align: left;
+  }
+
+  .calculator-shell {
+    border-radius: 1.4rem;
+    padding: 1rem;
+  }
+
+  .btn {
+    height: 3.7rem;
+    font-size: 1.55rem;
+  }
+}

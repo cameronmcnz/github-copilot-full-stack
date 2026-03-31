@@ -1,0 +1,220 @@
+openapi: 3.0.3
+info:
+  title: Basic Calculator API
+  version: 1.0.0
+  description: >-
+    Contract-first REST API for a basic calculator. Each operation accepts
+    exactly two numeric inputs and returns a raw numeric result.
+servers:
+  - url: http://localhost:3001
+    description: calculator-fastify (TypeScript/Fastify)
+  - url: http://localhost:3002
+    description: calculator-fastapi (Python/FastAPI)
+  - url: http://localhost:3003
+    description: calculator-micronaut (Java/Micronaut)
+tags:
+  - name: Calculator
+    description: Basic two-operand calculator operations
+paths:
+  /sum:
+    get:
+      tags:
+        - Calculator
+      summary: Add two numbers
+      operationId: getSum
+      parameters:
+        - $ref: '#/components/parameters/Augend'
+        - $ref: '#/components/parameters/Addend'
+      responses:
+        '200':
+          description: Sum of the two inputs
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+              example: 9
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /difference:
+    get:
+      tags:
+        - Calculator
+      summary: Subtract one number from another
+      operationId: getDifference
+      parameters:
+        - $ref: '#/components/parameters/Minuend'
+        - $ref: '#/components/parameters/Subtrahend'
+      responses:
+        '200':
+          description: Difference of the two inputs
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+              example: 6
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /product:
+    get:
+      tags:
+        - Calculator
+      summary: Multiply two numbers
+      operationId: getProduct
+      parameters:
+        - $ref: '#/components/parameters/Multiplicand'
+        - $ref: '#/components/parameters/Multiplier'
+      responses:
+        '200':
+          description: Product of the two inputs
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+              example: 42
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /quotient:
+    get:
+      tags:
+        - Calculator
+      summary: Divide one number by another
+      operationId: getQuotient
+      parameters:
+        - $ref: '#/components/parameters/Dividend'
+        - $ref: '#/components/parameters/Divisor'
+      responses:
+        '200':
+          description: Quotient of the two inputs
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+              example: 2.5
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/InvalidCalculation'
+  /remainder:
+    get:
+      tags:
+        - Calculator
+      summary: Calculate the remainder after division
+      operationId: getRemainder
+      parameters:
+        - $ref: '#/components/parameters/Dividend'
+        - $ref: '#/components/parameters/Divisor'
+      responses:
+        '200':
+          description: Remainder of the division
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+              example: 1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/InvalidCalculation'
+components:
+  parameters:
+    Augend:
+      name: augend
+      in: query
+      required: true
+      description: First number to add
+      schema:
+        type: number
+        format: double
+    Addend:
+      name: addend
+      in: query
+      required: true
+      description: Second number to add
+      schema:
+        type: number
+        format: double
+    Minuend:
+      name: minuend
+      in: query
+      required: true
+      description: Number from which another number is subtracted
+      schema:
+        type: number
+        format: double
+    Subtrahend:
+      name: subtrahend
+      in: query
+      required: true
+      description: Number to subtract from the minuend
+      schema:
+        type: number
+        format: double
+    Multiplicand:
+      name: multiplicand
+      in: query
+      required: true
+      description: First number to multiply
+      schema:
+        type: number
+        format: double
+    Multiplier:
+      name: multiplier
+      in: query
+      required: true
+      description: Second number to multiply
+      schema:
+        type: number
+        format: double
+    Dividend:
+      name: dividend
+      in: query
+      required: true
+      description: Number to be divided
+      schema:
+        type: number
+        format: double
+    Divisor:
+      name: divisor
+      in: query
+      required: true
+      description: Number by which the dividend is divided
+      schema:
+        type: number
+        format: double
+  responses:
+    BadRequest:
+      description: Request was missing required parameters or used invalid values
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: bad_request
+            message: Both required numeric parameters must be provided.
+    InvalidCalculation:
+      description: Request was syntactically valid but cannot be calculated
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: invalid_calculation
+            message: Divisor must not be zero.
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+        message:
+          type: string
+          description: Human-readable description of the error

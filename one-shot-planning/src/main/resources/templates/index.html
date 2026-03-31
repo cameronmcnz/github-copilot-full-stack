@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosette RPS</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="hero-card">
+            <div>
+                <p class="eyebrow">Enterprise Demo</p>
+                <h1>Rosette Rock Paper Scissors</h1>
+                <p class="hero-copy">A polished best-two-of-three match experience with durable anonymous sessions, full
+                    history, and REST-first interactions.</p>
+            </div>
+            <div class="hero-actions">
+                <button id="new-match-header" class="primary-button">Start New Match</button>
+                <a class="secondary-link" href="/swagger-ui.html" target="_blank" rel="noreferrer">Explore API</a>
+            </div>
+        </header>
+
+        <nav class="tab-bar" aria-label="Main navigation">
+            <button class="tab-button active" data-tab="play">Play</button>
+            <button class="tab-button" data-tab="history">History</button>
+            <button class="tab-button" data-tab="detail">Match Detail</button>
+            <button class="tab-button" data-tab="troubleshooting">Troubleshooting</button>
+        </nav>
+
+        <main>
+            <section id="play" class="tab-panel active">
+                <div class="content-grid">
+                    <article class="card match-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="card-kicker">Current Match</p>
+                                <h2>Play against the server</h2>
+                            </div>
+                            <button id="new-match-play" class="ghost-button">New Match</button>
+                        </div>
+
+                        <div id="play-empty" class="empty-state hidden">
+                            <div class="empty-emoji">🌸</div>
+                            <h3>No active match</h3>
+                            <p>Start a match to begin your best two out of three series.</p>
+                            <button id="start-empty-match" class="primary-button">Start Match</button>
+                        </div>
+
+                        <div id="play-content" class="hidden">
+                            <div class="scoreboard">
+                                <div class="score-pill player-pill">
+                                    <span class="score-label">You</span>
+                                    <strong id="player-score">0</strong>
+                                </div>
+                                <div class="score-pill round-pill">
+                                    <span class="score-label">Round</span>
+                                    <strong id="round-number">1</strong>
+                                </div>
+                                <div class="score-pill computer-pill">
+                                    <span class="score-label">Computer</span>
+                                    <strong id="computer-score">0</strong>
+                                </div>
+                            </div>
+
+                            <p id="status-banner" class="status-banner neutral">Round 1 is ready. Make your move.</p>
+
+                            <div class="moves-row" id="move-buttons">
+                                <button class="move-button" data-move="ROCK"><span
+                                        class="move-emoji">🪨</span><span>Rock</span></button>
+                                <button class="move-button" data-move="PAPER"><span
+                                        class="move-emoji">📄</span><span>Paper</span></button>
+                                <button class="move-button" data-move="SCISSORS"><span
+                                        class="move-emoji">✂️</span><span>Scissors</span></button>
+                            </div>
+
+                            <div id="latest-round" class="round-callout hidden"></div>
+
+                            <div id="summary-card" class="summary-card hidden">
+                                <h3 id="summary-title">Match complete</h3>
+                                <p id="summary-message"></p>
+                                <button id="play-again" class="primary-button">Play Again</button>
+                            </div>
+
+                            <div>
+                                <div class="subsection-header">
+                                    <h3>Rounds so far</h3>
+                                    <span id="round-count-badge" class="badge">0 rounds</span>
+                                </div>
+                                <div id="round-history" class="round-history"></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card insight-card">
+                        <div class="card-header slim">
+                            <div>
+                                <p class="card-kicker">Tips</p>
+                                <h2>How this app behaves</h2>
+                            </div>
+                        </div>
+                        <ul class="insight-list">
+                            <li>Your anonymous user ID is stored in a durable cookie issued by the server.</li>
+                            <li>Refreshing the browser restores your active match from persisted state.</li>
+                            <li>Starting a new match immediately replaces any unfinished active match.</li>
+                            <li>Every screen uses the REST API rather than embedding game rules in the page.</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section id="history" class="tab-panel">
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <p class="card-kicker">Match Archive</p>
+                            <h2>History</h2>
+                        </div>
+                        <button id="refresh-history" class="ghost-button">Refresh</button>
+                    </div>
+                    <div id="history-list" class="history-list"></div>
+                </article>
+            </section>
+
+            <section id="detail" class="tab-panel">
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <p class="card-kicker">Selected Match</p>
+                            <h2>Match Detail</h2>
+                        </div>
+                    </div>
+                    <div id="detail-empty" class="empty-state">
+                        <div class="empty-emoji">🪞</div>
+                        <h3>No match selected</h3>
+                        <p>Open a match from the history tab to inspect every round.</p>
+                    </div>
+                    <div id="detail-content" class="hidden"></div>
+                </article>
+            </section>
+
+            <section id="troubleshooting" class="tab-panel">
+                <div class="content-grid">
+                    <article class="card">
+                        <div class="card-header slim">
+                            <div>
+                                <p class="card-kicker">Diagnostics</p>
+                                <h2>Health</h2>
+                            </div>
+                        </div>
+                        <div id="health-status" class="health-stack"></div>
+                        <button id="refresh-health" class="ghost-button">Refresh Health</button>
+                    </article>
+
+                    <article class="card">
+                        <div class="card-header slim">
+                            <div>
+                                <p class="card-kicker">API</p>
+                                <h2>Exploration</h2>
+                            </div>
+                        </div>
+                        <div class="link-stack">
+                            <a class="secondary-link block-link" href="/swagger-ui.html" target="_blank"
+                                rel="noreferrer">Swagger UI</a>
+                            <a class="secondary-link block-link" href="/v3/api-docs" target="_blank"
+                                rel="noreferrer">OpenAPI JSON</a>
+                            <a class="secondary-link block-link" href="/actuator/health" target="_blank"
+                                rel="noreferrer">Actuator Health</a>
+                        </div>
+                        <pre id="api-preview"
+                            class="api-preview">Select a diagnostic action to see recent JSON responses.</pre>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="/js/app.js"></script>
+</body>
+
+</html>

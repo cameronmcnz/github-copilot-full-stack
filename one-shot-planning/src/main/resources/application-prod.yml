@@ -1,0 +1,8 @@
+spring:
+  thymeleaf:
+    cache: true
+
+management:
+  endpoint:
+    health:
+      show-details: never

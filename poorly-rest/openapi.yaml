@@ -1,0 +1,176 @@
+﻿openapi: 3.0.3
+info:
+  title: Basic Calculator API
+  version: 1.1.0
+  description: |
+    Contract-first RESTful API for a basic calculator.
+    Each operation accepts exactly two numeric parameters.
+    This contract is implemented by Express, Flask, and Spring Boot example services.
+servers:
+  - url: http://localhost:3007
+    description: TypeScript and ExpressJS implementation
+  - url: http://localhost:5007
+    description: Python and Flask implementation
+  - url: http://localhost:8007
+    description: Java and Spring Boot implementation
+tags:
+  - name: Calculator
+    description: Basic calculator operations that accept two numeric query parameters.
+paths:
+  /operations/add:
+    get:
+      tags: [Calculator]
+      operationId: add
+      summary: Add two numbers
+      parameters:
+        - $ref: '#/components/parameters/a'
+        - $ref: '#/components/parameters/b'
+      responses:
+        '200':
+          description: Addition result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculationResult'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /operations/subtract:
+    get:
+      tags: [Calculator]
+      operationId: subtract
+      summary: Subtract the second number from the first number
+      parameters:
+        - $ref: '#/components/parameters/a'
+        - $ref: '#/components/parameters/b'
+      responses:
+        '200':
+          description: Subtraction result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculationResult'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /operations/multiply:
+    get:
+      tags: [Calculator]
+      operationId: multiply
+      summary: Multiply two numbers
+      parameters:
+        - $ref: '#/components/parameters/a'
+        - $ref: '#/components/parameters/b'
+      responses:
+        '200':
+          description: Multiplication result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculationResult'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /operations/divide:
+    get:
+      tags: [Calculator]
+      operationId: divide
+      summary: Divide the first number by the second number
+      parameters:
+        - $ref: '#/components/parameters/a'
+        - $ref: '#/components/parameters/b'
+      responses:
+        '200':
+          description: Division result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculationResult'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Division by zero is not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /operations/modulus:
+    get:
+      tags: [Calculator]
+      operationId: modulus
+      summary: Return the remainder of division of the first number by the second number
+      parameters:
+        - $ref: '#/components/parameters/a'
+        - $ref: '#/components/parameters/b'
+      responses:
+        '200':
+          description: Modulus result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculationResult'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Division by zero is not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  parameters:
+    a:
+      name: a
+      in: query
+      required: true
+      description: First numeric input
+      schema:
+        type: number
+      example: 10
+    b:
+      name: b
+      in: query
+      required: true
+      description: Second numeric input
+      schema:
+        type: number
+      example: 5
+  schemas:
+    CalculationResult:
+      type: object
+      additionalProperties: false
+      required:
+        - result
+      properties:
+        result:
+          type: number
+          description: Result of the calculator operation
+          example: 15
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+          example: Invalid numeric input
+
